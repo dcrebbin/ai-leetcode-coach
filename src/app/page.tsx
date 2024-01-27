@@ -22,9 +22,9 @@ export default function Home() {
     },
   });
 
-  const initialPrompt = "";
+  const initialPrompt = "Hello I'm John Smith, I'm here to help you with your interview today.";
   const defaultContextSchema: MessageSchema = {
-    role: "assistant",
+    role: "system",
     content: initialPrompt,
   };
   const [content, setContent]: any[] = useState([]);
@@ -53,7 +53,7 @@ export default function Home() {
 
   async function retrievedMessage(inputValue: string) {
     updateMessagesArray(inputValue);
-    const response: any = await (await fetch("/api/post-message", { method: "POST", body: JSON.stringify({ messages: messagesArray }) })).json();
+    const response: any = await (await fetch("/api/generate-message", { method: "POST", body: JSON.stringify({ messages: messagesArray }) })).json();
     const gptResponse = response;
 
     setMessagesArray((prevState) => [...prevState, gptResponse]);
@@ -63,25 +63,14 @@ export default function Home() {
     setContent(conversationArray);
     setIsLoading(false);
   }
+
   async function textToSpeech(inputString: string) {
     setSpeechToTextLoading(true);
-    const data: any = {
+    const data = {
       text: inputString,
-      model_id: "eleven_monolingual_v1",
-      voice_settings: {
-        stability: 0.5,
-        similarity_boost: 0.5,
-      },
     };
-    const headers: any = {
-      Accept: "audio/mpeg",
-      "Content-Type": "application/json",
-      "xi-api-key": "",
-    };
-    const response = await fetch("https://api.elevenlabs.io/v1/text-to-speech/pNInz6obpgDQGcFmaJgB/stream", {
-      headers: headers,
+    const response = await fetch("/api/text-to-speech", {
       body: JSON.stringify(data),
-      method: "POST",
     });
 
     const audioBlob = await response.blob();
@@ -98,7 +87,7 @@ export default function Home() {
     const formData = new FormData();
     formData.append("file", audio);
 
-    const request: any = await fetch("/api/whisper", {
+    const request: any = await fetch("/api/speech-to-text", {
       method: "POST",
       body: formData,
     });
@@ -124,7 +113,7 @@ export default function Home() {
       <AppBar></AppBar>
       <main className="bg-blue-400 self-stretch flex flex-grow">
         <div className="bg-green-400 w-full p-2">
-          <ChatPane isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
+          <ChatPane whisperIsLoading={whisperIsLoading} isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
         </div>
         <div className="bg-yellow-300 w-full p-2 flex items-center flex-col">
           <TutorInterviewPane problemStarted={false} interviewSettings={store.interviewSettings} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
