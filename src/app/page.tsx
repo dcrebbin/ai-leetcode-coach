@@ -69,6 +69,14 @@ export default function Home() {
     setIsLoading(false);
   }
 
+  let interval: any = null;
+
+  function startTalking() {
+    interval = setInterval(() => {
+      setIsEmojiTalking((prevState) => !prevState);
+    }, 200);
+    return () => clearInterval(interval);
+  }
   async function textToSpeech(inputString: string) {
     setSpeechToTextLoading(true);
     const data = {
@@ -84,11 +92,18 @@ export default function Home() {
     });
 
     const audioBlob = await response.blob();
+    setSpeechToTextLoading(false);
     const audioUrl = URL.createObjectURL(audioBlob);
     const audio = new Audio(audioUrl);
     audio.volume = 0.5;
     audio.play();
-    setSpeechToTextLoading(false);
+
+    setIsEmojiTalking(true);
+    startTalking();
+    audio.onended = () => {
+      clearInterval(interval);
+      setIsEmojiTalking(false);
+    };
   }
 
   async function whisperRequest(audioBlob: any) {
