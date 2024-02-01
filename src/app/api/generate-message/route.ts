@@ -1,10 +1,12 @@
+import { MessageSchema } from "@/app/page";
 import type { NextApiRequest, NextApiResponse } from "next";
 const apiKey = process.env.OPEN_AI_API_KEY;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  const textInput = JSON.parse(req.body).text;
+export async function POST(req: NextApiRequest, res: NextApiResponse<any>) {
+  const requestBody = JSON.parse(req.body);
+  console.log(requestBody);
+  const messages: MessageSchema[] = requestBody.messages;
   const body: any = {
-    input: textInput,
     model: "gpt-4-turbo",
     messages: [
       {
@@ -13,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       },
       {
         role: "user",
-        content: textInput,
+        content: messages[messages.length - 1].content,
       },
     ],
   };
