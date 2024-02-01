@@ -75,7 +75,9 @@ export default function Home() {
       text: inputString,
     };
     const response = await fetch("/api/text-to-speech", {
+      method: "POST",
       headers: {
+        Accept: "audio/mpeg",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
