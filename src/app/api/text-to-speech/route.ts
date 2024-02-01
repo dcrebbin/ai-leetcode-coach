@@ -1,24 +1,39 @@
-import { NextApiRequest, NextApiResponse } from "next";
 const apiKey = process.env.OPEN_AI_API_KEY;
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const textInput = JSON.parse(req.body).text;
-  const body: any = {
-    input: textInput,
+type OpenAiTtsRequest = {
+  input: string;
+  model: string;
+  voice: string;
+};
+
+export async function POST(req: Request, res: Response) {
+  const { text } = await req.json();
+  const body: OpenAiTtsRequest = {
+    input: text,
     model: "tts-1",
     voice: "alloy",
   };
   const headers: any = {
     accept: "audio/mpeg",
-    ContentType: "application/json",
+    "Content-Type": "application/json",
     Authorization: `Bearer ${apiKey}`,
   };
   const response = await fetch("https://api.openai.com/v1/audio/speech", {
     headers: headers,
-    body: body,
+    body: JSON.stringify(body),
     method: "POST",
   });
 
+  const status = response.status;
+  if (status !== 200) {
+    console.log(await response.json());
+    return new Response(response.statusText, { status });
+  }
+
   const data = await response.blob();
-  res.status(200).send(data);
+  return new Response(data, {
+    headers: {
+      "Content-Type": "audio/mpeg",
+    },
+  });
 }
