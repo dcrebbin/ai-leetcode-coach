@@ -7,7 +7,7 @@ import { useRef, useState } from "react";
 import AppBar from "@/components/app-bar";
 import ChatPane from "@/components/chat-pane";
 
-interface MessageSchema {
+export interface MessageSchema {
   role: "assistant" | "user" | "system";
   content: string;
 }
@@ -22,22 +22,21 @@ export default function Home() {
     },
   });
 
-  const initialPrompt = "Hello I'm John Smith, I'm here to help you with your interview today.";
+  const initialPrompt = "Hi, I'm John Smith. I'm here to help you with your interview today. Please tell me a little bit about yourself";
   const defaultContextSchema: MessageSchema = {
-    role: "system",
+    role: "assistant",
     content: initialPrompt,
   };
-  const [content, setContent]: any[] = useState([]);
+  const [content, setContent]: any[] = useState([defaultContextSchema]);
   const [messagesArray, setMessagesArray] = useState([defaultContextSchema]);
   const [speechToTextLoading, setSpeechToTextLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const [whisperIsLoading, setWhisperIsLoading] = useState(false);
-  const [conversation, setConversation] = useState(`${initialPrompt}`);
-  const input: any = useRef();
+  const input = useRef<HTMLInputElement>(null);
 
   async function sendMessage() {
-    const inputValue = input.current.value;
+    const inputValue = input.current!.value || "";
     const newMessage = { content: inputValue, role: "user" };
     if (inputValue == "") {
       return;
@@ -48,18 +47,24 @@ export default function Home() {
     await setContent(conversationArray);
     setIsLoading(true);
     retrievedMessage(inputValue);
-    input.current.value = "";
+    input.current!.value = "";
   }
 
   async function retrievedMessage(inputValue: string) {
     updateMessagesArray(inputValue);
-    const response: any = await (await fetch("/api/generate-message", { method: "POST", body: JSON.stringify({ messages: messagesArray }) })).json();
-    const gptResponse = response;
-
-    setMessagesArray((prevState) => [...prevState, gptResponse]);
+    const response = await fetch("/api/generate-message", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ messages: messagesArray }),
+    });
+    const generatedMessage = await response.json();
+    console.log(generatedMessage);
+    setMessagesArray((prevState) => [...prevState, generatedMessage]);
     const conversationArray = content;
-    conversationArray.push(gptResponse);
-    textToSpeech(gptResponse.content);
+    conversationArray.push(generatedMessage);
+    // textToSpeech(generatedMessage.content);
     setContent(conversationArray);
     setIsLoading(false);
   }
@@ -70,6 +75,9 @@ export default function Home() {
       text: inputString,
     };
     const response = await fetch("/api/text-to-speech", {
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(data),
     });
 
@@ -88,10 +96,14 @@ export default function Home() {
     formData.append("file", audio);
 
     const request: any = await fetch("/api/speech-to-text", {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
       method: "POST",
       body: formData,
     });
     const { transcript } = await request.json();
+    if (!input.current) return;
     input.current.value = transcript;
     setWhisperIsLoading(false);
     console.log(transcript);
@@ -103,7 +115,6 @@ export default function Home() {
       role: "user",
       content: newMessage,
     };
-    console.log({ messagesArray });
     messagesArray.push(newMessageSchema);
     setMessagesArray(messagesArray);
   };
@@ -117,7 +128,7 @@ export default function Home() {
         </div>
         <div className="bg-yellow-300 w-full p-2 flex items-center flex-col">
           <TutorInterviewPane problemStarted={false} interviewSettings={store.interviewSettings} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
-          <UserInterviewPane restartInterview={null} setIsAwaitingMessageResponse={null} sendMessage={sendMessage}></UserInterviewPane>
+          <UserInterviewPane whisperRequest={whisperRequest} restartInterview={null} setIsAwaitingMessageResponse={null} sendMessage={sendMessage}></UserInterviewPane>
         </div>
       </main>
     </div>
