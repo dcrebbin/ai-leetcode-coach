@@ -6,7 +6,7 @@ export default function AppBar(props: any) {
       <Image alt="Up It Quest Logo" src="/images/up-it-quest-logo.svg" width={80} height={80} className="p-1"></Image>
       <button
         onClick={() => {
-          alert("Settings not implemented yet");
+          props.setSettingsOpen(true);
         }}
         className="px-2 p-1 text-xl bg-black text-white rounded-md font-sans drop-shadow-md"
       >

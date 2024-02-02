@@ -7,6 +7,7 @@ import FormData from "form-data";
 
 import AppBar from "@/components/app-bar";
 import ChatPane from "@/components/chat-pane";
+import Settings from "@/components/settings";
 
 export interface MessageSchema {
   role: "assistant" | "user" | "system";
@@ -15,6 +16,7 @@ export interface MessageSchema {
 
 export default function Home() {
   const [problemStarted, setProblemStarted] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [isEmojiTalking, setIsEmojiTalking] = useState(false);
   const [store, updateStore] = useState({
     interviewSettings: {
@@ -136,7 +138,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[url(/images/up-it-quest-background.svg)] items-stretch">
-      <AppBar></AppBar>
+      <AppBar setSettingsOpen={setSettingsOpen}></AppBar>
+      {settingsOpen ? <Settings setSettingsOpen={setSettingsOpen}></Settings> : null}
       <main className="bg-blue-400 self-stretch flex flex-grow">
         <div className="bg-green-400 w-full p-2">
           <ChatPane whisperIsLoading={whisperIsLoading} isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
