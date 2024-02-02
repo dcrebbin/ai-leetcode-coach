@@ -40,7 +40,7 @@ export default function UserInterviewPane(props: any) {
         >
           {isCameraOn ? <VideoCameraSlashIcon className="h-8 w-8 text-white"></VideoCameraSlashIcon> : <VideoCameraIcon className="h-8 w-8 text-white"></VideoCameraIcon>}
         </button>
-        <AudioRecorder sendMessage={props.sendMessage} setIsAwaitingMessageResponse={props.setIsAwaitingMessageResponse}></AudioRecorder>
+        <AudioRecorder whisperRequest={props.whisperRequest} sendMessage={props.sendMessage} setIsAwaitingMessageResponse={props.setIsAwaitingMessageResponse}></AudioRecorder>
         <button
           className="text-3xl font-bold text-white hover:text-red-600 items-center flex justify-center"
           onClick={() => {

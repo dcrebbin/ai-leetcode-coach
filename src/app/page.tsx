@@ -3,6 +3,7 @@
 import TutorInterviewPane from "../components/tutor-interview-pane";
 import UserInterviewPane from "../components/user-interview-pane";
 import { useRef, useState } from "react";
+import FormData from "form-data";
 
 import AppBar from "@/components/app-bar";
 import ChatPane from "@/components/chat-pane";
@@ -109,13 +110,10 @@ export default function Home() {
   async function whisperRequest(audioBlob: any) {
     setWhisperIsLoading(true);
     const audio = new File([audioBlob], "audio.wav");
-    const formData = new FormData();
+    const formData: any = new FormData();
     formData.append("file", audio);
 
     const request: any = await fetch("/api/speech-to-text", {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
       method: "POST",
       body: formData,
     });
