@@ -1,4 +1,9 @@
+import { useRef } from "react";
+
 export default function Settings(props: any) {
+  const openAiKeyInput = useRef<HTMLInputElement>(null);
+  const token = window.localStorage.getItem("OPEN_AI_API_KEY") || "";
+
   return (
     <div className="relative z-50" aria-labelledby="modal-title" aria-modal="true">
       <div
@@ -19,12 +24,24 @@ export default function Settings(props: any) {
                   <br></br>
                   <hr></hr>
                   <div className="mt-2 w-full flex flex-col">
-                    <h4 className="font-bold">Account</h4>
+                    <h4 className="font-bold">API Keys</h4>
                     <table className="w-full flex flex-col ">
                       <tbody>
                         <tr className="w-full flex justify-between">
-                          <td>Name:</td>
-                          <td className="font-bold">Bob</td>
+                          <td className="">Open AI</td>
+                          <div>
+                            <input value={token} placeholder="Enter your Open AI API Key" ref={openAiKeyInput} type="text" className=" h-min border-black border-b-2"></input>
+                            <button
+                              onClick={() => {
+                                if (openAiKeyInput?.current?.value) {
+                                  window.localStorage.setItem("OPEN_AI_API_KEY", openAiKeyInput?.current?.value);
+                                }
+                              }}
+                              className="bg-black mx-2 p-1 text-white rounded-md"
+                            >
+                              Save
+                            </button>
+                          </div>
                         </tr>
                       </tbody>
                     </table>

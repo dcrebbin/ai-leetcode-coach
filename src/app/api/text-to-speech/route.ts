@@ -1,5 +1,3 @@
-const apiKey = process.env.OPEN_AI_API_KEY;
-
 type OpenAiTtsRequest = {
   input: string;
   model: string;
@@ -8,6 +6,7 @@ type OpenAiTtsRequest = {
 
 export async function POST(req: Request, res: Response) {
   const { text } = await req.json();
+  const apiKey = req.headers.get("x-api-key");
   const body: OpenAiTtsRequest = {
     input: text,
     model: "tts-1",

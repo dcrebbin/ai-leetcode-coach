@@ -55,8 +55,10 @@ export default function Home() {
 
   async function retrievedMessage(inputValue: string) {
     updateMessagesArray(inputValue);
+    const openAiApiKey = window.localStorage.getItem("OPEN_AI_API_KEY");
     const response = await fetch("/api/generate-message", {
       headers: {
+        "x-api-key": openAiApiKey ?? "",
         "Content-Type": "application/json",
       },
       method: "POST",
@@ -67,7 +69,7 @@ export default function Home() {
     setMessagesArray((prevState) => [...prevState, generatedMessage]);
     const conversationArray = content;
     conversationArray.push(generatedMessage);
-    // textToSpeech(generatedMessage.content);
+    textToSpeech(generatedMessage.content);
     setContent(conversationArray);
     setIsLoading(false);
   }
@@ -85,10 +87,12 @@ export default function Home() {
     const data = {
       text: inputString,
     };
+    const openAiApiKey = window.localStorage.getItem("OPEN_AI_API_KEY");
     const response = await fetch("/api/text-to-speech", {
       method: "POST",
       headers: {
         Accept: "audio/mpeg",
+        "x-api-key": openAiApiKey ?? "",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
@@ -117,6 +121,9 @@ export default function Home() {
 
     const request: any = await fetch("/api/speech-to-text", {
       method: "POST",
+      headers: {
+        "x-api-key": openAiApiKey ?? "",
+      },
       body: formData,
     });
     const { transcript } = await request.json();

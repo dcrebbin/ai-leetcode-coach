@@ -1,8 +1,8 @@
 import { MessageSchema } from "@/app/page";
-const apiKey = process.env.OPEN_AI_API_KEY;
 
 export async function POST(req: Request, res: Response) {
   const json = await req.json();
+  const apiKey = req.headers.get("x-api-key");
   const messages: MessageSchema[] = json.messages;
 
   const headers: any = {

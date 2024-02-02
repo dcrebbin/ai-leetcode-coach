@@ -1,4 +1,5 @@
 export async function POST(request: Request) {
+  const apiKey = request.headers.get("x-api-key");
   const formData = await request.formData();
   formData.append("model", "whisper-1");
   formData.append("language", "en");
@@ -6,7 +7,7 @@ export async function POST(request: Request) {
   const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: formData,
   });

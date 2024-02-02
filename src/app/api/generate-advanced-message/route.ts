@@ -6,6 +6,7 @@ function stepSuccess(stepData: []) {
 
 export async function POST(req: Request) {
   const json = await req.json();
+  const apiKey = req.headers.get("x-api-key");
 
   const { password, message, customAssistant } = json;
 
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
     headers: {
       "Content-Type": "application/json",
       "OpenAI-Beta": "assistants=v1",
-      Authorization: "Bearer " + process.env.OPEN_AI_API_KEY,
+      Authorization: "Bearer " + apiKey,
     },
   });
 
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
       headers: {
         "Content-Type": "application/json",
         "OpenAI-Beta": "assistants=v1",
-        Authorization: "Bearer " + process.env.OPEN_AI_API_KEY,
+        Authorization: "Bearer " + apiKey,
       },
     });
 
@@ -69,7 +70,7 @@ export async function POST(req: Request) {
     headers: {
       "Content-Type": "application/json",
       "OpenAI-Beta": "assistants=v1",
-      Authorization: "Bearer " + process.env.OPEN_AI_API_KEY,
+      Authorization: "Bearer " + apiKey,
     },
   });
 
