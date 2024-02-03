@@ -26,7 +26,7 @@ export default function Home() {
     },
   });
 
-  const initialPrompt = "Hi, I'm Clara. Welcome to Up It Quest! An AI interview preparation platform. To begin I'm going to ask you to code up bubble sort!";
+  const initialPrompt = "Hi, I'm Clara. Welcome to Up It Quest! An AI interview preparation platform!";
   const defaultContextSchema: MessageSchema = {
     role: "assistant",
     content: initialPrompt,
