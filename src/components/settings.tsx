@@ -30,7 +30,10 @@ export default function Settings(props: any) {
                   <h3 className="text-xl font-bold leading-6 text-gray-900" id="modal-title">
                     Settings
                   </h3>
-                  <br></br>
+                  <p className="text-xs">
+                    {"("}We only save your API key to local storage to then pass them to an API route within the app, too sus for you? Feel feel to deploy it locally! 🤠
+                    {")"}
+                  </p>
                   <hr></hr>
                   <div className="mt-2 w-full flex flex-col gap-2">
                     <h4 className="font-bold">API Keys</h4>
