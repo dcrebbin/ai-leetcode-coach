@@ -13,19 +13,9 @@ export async function POST(request: Request) {
   });
   const { text, error } = await response.json();
   if (response.ok) {
-    return new Response(JSON.stringify({ transcript: text }), {
-      headers: {
-        "Content-Type": "text/plain",
-      },
-    });
+    return Response.json({ transcript: text });
   } else {
     console.log(error.message);
-    return new Response(error.message, { status: 400 });
+    return Response.json(error.message, { status: 400 });
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
