@@ -35,7 +35,7 @@ export default function Home() {
   const [messagesArray, setMessagesArray] = useState([defaultContextSchema]);
   const [speechToTextLoading, setSpeechToTextLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [autoPlay, setAutoPlay] = useState(window.localStorage.getItem("AUTO_PLAY") === "true" || false);
   const defaultCode = `#include <iostream>
 
 using namespace std;
@@ -79,7 +79,9 @@ int main() {
     setMessagesArray((prevState) => [...prevState, generatedMessage]);
     const conversationArray = content;
     conversationArray.push(generatedMessage);
-    textToSpeech(generatedMessage.content);
+    if (autoPlay) {
+      textToSpeech(generatedMessage.content);
+    }
     setContent(conversationArray);
     setIsLoading(false);
   }
@@ -154,7 +156,7 @@ int main() {
   return (
     <div className="min-h-screen flex flex-col bg-[url(/images/up-it-quest-background.svg)] items-stretch">
       <AppBar setSettingsOpen={setSettingsOpen}></AppBar>
-      {settingsOpen || !openAiApiKey ? <Settings openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
+      {settingsOpen || !openAiApiKey ? <Settings setAutoPlay={setAutoPlay} autoPlay={autoPlay} openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
       <main className="bg-blue-400 self-stretch flex flex-grow">
         <div className="bg-green-400 w-full p-2">
           <ChatPane setCode={setCode} code={code} whisperIsLoading={whisperIsLoading} isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
