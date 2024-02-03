@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Up It Quest
 
-## Getting Started
+Up It Quest is an AI powered interview trainer for technical interviews and leetcode/DSA coaching!
 
-First, run the development server:
+### Technology:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Frontend: [Next](https://nextjs.org/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Database: `window.localStorage` 🤡
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### AI Services:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+#### Text Generation:
 
-## Learn More
+- [OpenAi (GPT4 Turbo)](https://platform.openai.com/docs/api-reference/chat)  (GPT4 Turbo is the best of both worlds)
 
-To learn more about Next.js, take a look at the following resources:
+#### Text to Speech:
+- [OpenAi (TTS 1)](https://platform.openai.com/docs/api-reference/audio/createSpeech) 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Speech to Text:
+- [OpenAi (Whisper 1)](https://platform.openai.com/docs/api-reference/audio/createTranscription)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Setup 
 
-## Deploy on Vercel
+1) npm i
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2) npm run dev
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3) Added your Open Ai API key to the settings
+
+4) Load your leetcode question
+
+5) Enjoy!
