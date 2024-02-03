@@ -2,7 +2,7 @@
 
 import TutorInterviewPane from "../components/tutor-interview-pane";
 import UserInterviewPane from "../components/user-interview-pane";
-import { useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import FormData from "form-data";
 
 import AppBar from "@/components/app-bar";
@@ -30,12 +30,19 @@ export default function Home() {
     role: "assistant",
     content: initialPrompt,
   };
-  const [openAiApiKey, setOpenAiApiKey] = useState(window.localStorage.getItem("OPEN_AI_API_KEY") || "");
+
+  const [openAiApiKey, setOpenAiApiKey] = useState("");
   const [content, setContent]: any[] = useState([defaultContextSchema]);
   const [messagesArray, setMessagesArray] = useState([defaultContextSchema]);
   const [speechToTextLoading, setSpeechToTextLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [autoPlay, setAutoPlay] = useState(window.localStorage.getItem("AUTO_PLAY") === "true" || false);
+  const [autoPlay, setAutoPlay] = useState(true);
+
+  useEffect(() => {
+    setOpenAiApiKey(window.localStorage.getItem("OPEN_AI_API_KEY") ?? "");
+    setAutoPlay(window.localStorage.getItem("AUTO_PLAY") === "true" ?? true);
+  }, []);
+
   const defaultCode = `#include <iostream>
 
 using namespace std;
