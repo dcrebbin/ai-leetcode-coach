@@ -30,6 +30,7 @@ export default function Home() {
     role: "assistant",
     content: initialPrompt,
   };
+  const [openAiApiKey, setOpenAiApiKey] = useState(window.localStorage.getItem("OPEN_AI_API_KEY") || "");
   const [content, setContent]: any[] = useState([defaultContextSchema]);
   const [messagesArray, setMessagesArray] = useState([defaultContextSchema]);
   const [speechToTextLoading, setSpeechToTextLoading] = useState(false);
@@ -65,7 +66,6 @@ int main() {
 
   async function retrievedMessage(inputValue: string) {
     updateMessagesArray(inputValue);
-    const openAiApiKey = window.localStorage.getItem("OPEN_AI_API_KEY");
     const response = await fetch("/api/generate-message", {
       headers: {
         "x-api-key": openAiApiKey ?? "",
@@ -97,7 +97,6 @@ int main() {
     const data = {
       text: inputString,
     };
-    const openAiApiKey = window.localStorage.getItem("OPEN_AI_API_KEY");
     const response = await fetch("/api/text-to-speech", {
       method: "POST",
       headers: {
@@ -128,7 +127,6 @@ int main() {
     const audio = new File([audioBlob], "audio.wav");
     const formData: any = new FormData();
     formData.append("file", audio);
-    const openAiApiKey = window.localStorage.getItem("OPEN_AI_API_KEY");
     const request: any = await fetch("/api/speech-to-text", {
       method: "POST",
       headers: {
@@ -156,7 +154,7 @@ int main() {
   return (
     <div className="min-h-screen flex flex-col bg-[url(/images/up-it-quest-background.svg)] items-stretch">
       <AppBar setSettingsOpen={setSettingsOpen}></AppBar>
-      {settingsOpen ? <Settings setSettingsOpen={setSettingsOpen}></Settings> : null}
+      {settingsOpen || !openAiApiKey ? <Settings openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
       <main className="bg-blue-400 self-stretch flex flex-grow">
         <div className="bg-green-400 w-full p-2">
           <ChatPane setCode={setCode} code={code} whisperIsLoading={whisperIsLoading} isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
