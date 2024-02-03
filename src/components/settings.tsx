@@ -34,7 +34,7 @@ export default function Settings(props: any) {
                     Settings
                   </h3>
                   <p className="text-xs">
-                    {"("}We only save your API key to local storage to then pass them to an API route within the app, too sus for you? Feel feel to deploy it locally! 🤠
+                    {"("}We only save your API key to local storage to then pass it to an API route within the app, too sus for you? Feel feel to deploy it locally! 🤠
                     {")"}
                   </p>
                   <hr></hr>
@@ -131,7 +131,7 @@ export default function Settings(props: any) {
                 <p>Hey 👋</p>
                 <div className="flex items-center gap-1">
                   <p>
-                    We&apos;re <strong>open source!</strong> Find out at more here
+                    We&apos;re <strong>open source!</strong> Find out more here
                   </p>
                   <a target="_" href="https://github.com/dcrebbin/up-it-quest-next">
                     <MdiGithub className="w-8 h-8 hover:text-blue-600"></MdiGithub>

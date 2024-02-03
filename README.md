@@ -26,7 +26,7 @@ Up It Quest is an AI powered interview trainer for technical interviews and leet
 
 2) npm run dev
 
-3) Added your Open Ai API key to the settings
+3) Add your Open Ai API key to the settings
 
 4) Load your leetcode question
 
