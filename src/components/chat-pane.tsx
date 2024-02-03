@@ -1,6 +1,7 @@
 "use client";
 
 import { PlayIcon, PaperAirplaneIcon, ArrowPathIcon } from "@heroicons/react/20/solid";
+import { Editor } from "@monaco-editor/react";
 
 export default function ChatPane(props: any) {
   return (
@@ -27,6 +28,16 @@ export default function ChatPane(props: any) {
           </button>
         )}
       </div>
+      <Editor
+        onChange={(newValue) => {
+          props.setCode(newValue);
+        }}
+        height="30vh"
+        className="mx-8"
+        defaultLanguage="cpp"
+        theme="vs-dark"
+        defaultValue={props.code}
+      />
       {props?.content?.length === 0 ? <hr></hr> : <div className="hidden"></div>}
       <div className="flex flex-col-reverse">
         {props?.content?.map((e: any, i: number) => {
@@ -41,7 +52,7 @@ export default function ChatPane(props: any) {
               ) : (
                 <div className="flex items-center">
                   <div className="w-full m-2 bg-blue-800 px-4 py-2 text-white rounded-lg">
-                    <strong>John Smith</strong>
+                    <strong>Clara Codes</strong>
                     <br></br>
                     {e.content}
                   </div>

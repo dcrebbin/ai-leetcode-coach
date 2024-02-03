@@ -11,7 +11,13 @@ export async function POST(req: Request, res: Response) {
   };
   const body = JSON.stringify({
     model: "gpt-4-turbo-preview",
-    messages: [...messages],
+    messages: [
+      {
+        role: "system",
+        content: "You are a technical interview mentor. Do not respond with more than 2-3 sentences.",
+      },
+      ...messages,
+    ],
   });
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     headers: headers,

@@ -2,7 +2,7 @@ import { useRef } from "react";
 
 export default function Settings(props: any) {
   const openAiKeyInput = useRef<HTMLInputElement>(null);
-  const token = window.localStorage.getItem("OPEN_AI_API_KEY") || "";
+  const token = window.localStorage.getItem("OPEN_AI_API_KEY") ?? "";
 
   return (
     <div className="relative z-50" aria-labelledby="modal-title" aria-modal="true">

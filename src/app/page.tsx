@@ -25,7 +25,7 @@ export default function Home() {
     },
   });
 
-  const initialPrompt = "Hi, I'm John Smith. I'm here to help you with your interview today. Please tell me a little bit about yourself";
+  const initialPrompt = "Hi, I'm Clara. Welcome to Up It Quest! An AI interview preparation platform. To begin I'm going to ask you to code up bubble sort!";
   const defaultContextSchema: MessageSchema = {
     role: "assistant",
     content: initialPrompt,
@@ -34,6 +34,16 @@ export default function Home() {
   const [messagesArray, setMessagesArray] = useState([defaultContextSchema]);
   const [speechToTextLoading, setSpeechToTextLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const defaultCode = `#include <iostream>
+
+using namespace std;
+
+int main() {
+  cout << "Hello, World!";
+  return 0;
+}`;
+  const [code, setCode] = useState(defaultCode);
 
   const [whisperIsLoading, setWhisperIsLoading] = useState(false);
   const input = useRef<HTMLInputElement>(null);
@@ -118,7 +128,7 @@ export default function Home() {
     const audio = new File([audioBlob], "audio.wav");
     const formData: any = new FormData();
     formData.append("file", audio);
-
+    const openAiApiKey = window.localStorage.getItem("OPEN_AI_API_KEY");
     const request: any = await fetch("/api/speech-to-text", {
       method: "POST",
       headers: {
@@ -137,7 +147,7 @@ export default function Home() {
   const updateMessagesArray = (newMessage: string) => {
     const newMessageSchema: MessageSchema = {
       role: "user",
-      content: newMessage,
+      content: `message: ${newMessage} \n code: ${code}`,
     };
     messagesArray.push(newMessageSchema);
     setMessagesArray(messagesArray);
@@ -149,7 +159,7 @@ export default function Home() {
       {settingsOpen ? <Settings setSettingsOpen={setSettingsOpen}></Settings> : null}
       <main className="bg-blue-400 self-stretch flex flex-grow">
         <div className="bg-green-400 w-full p-2">
-          <ChatPane whisperIsLoading={whisperIsLoading} isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
+          <ChatPane setCode={setCode} code={code} whisperIsLoading={whisperIsLoading} isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
         </div>
         <div className="bg-yellow-300 w-full p-2 flex items-center flex-col">
           <TutorInterviewPane problemStarted={false} interviewSettings={store.interviewSettings} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
