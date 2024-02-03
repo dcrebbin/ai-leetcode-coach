@@ -10,7 +10,7 @@ import ChatPane from "@/components/chat-pane";
 import Settings from "@/components/settings";
 
 export interface MessageSchema {
-  role: "assistant" | "user" | "system";
+  role: "assistant" | "user" | "system" | "question";
   content: string;
 }
 
@@ -18,6 +18,7 @@ export default function Home() {
   const [problemStarted, setProblemStarted] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [isEmojiTalking, setIsEmojiTalking] = useState(false);
+  const [question, setQuestion] = useState({ __html: "" });
   const [store, updateStore] = useState({
     interviewSettings: {
       targetRole: "tutor",
@@ -55,6 +56,18 @@ int main() {
 
   const [whisperIsLoading, setWhisperIsLoading] = useState(false);
   const input = useRef<HTMLInputElement>(null);
+
+  function resetMessage() {
+    setMessagesArray([defaultContextSchema]);
+    setContent([defaultContextSchema]);
+  }
+
+  function updateQuestion(question: string) {
+    resetMessage();
+    setQuestion({ __html: question });
+    messagesArray.push({ role: "question", content: question });
+    setMessagesArray(messagesArray);
+  }
 
   async function sendMessage() {
     const inputValue = input.current!.value || "";
@@ -163,13 +176,16 @@ int main() {
   return (
     <div className="min-h-screen flex flex-col bg-[url(/images/up-it-quest-background.svg)] items-stretch">
       <AppBar setSettingsOpen={setSettingsOpen}></AppBar>
-      {settingsOpen || !openAiApiKey ? <Settings setAutoPlay={setAutoPlay} autoPlay={autoPlay} openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
+      {settingsOpen || !openAiApiKey ? <Settings updateQuestion={updateQuestion} setCode={setCode} setAutoPlay={setAutoPlay} autoPlay={autoPlay} openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
       <main className="bg-blue-400 self-stretch flex flex-grow">
         <div className="bg-green-400 w-full p-2">
           <ChatPane setCode={setCode} code={code} whisperIsLoading={whisperIsLoading} isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
         </div>
         <div className="bg-yellow-300 w-full p-2 flex items-center flex-col">
-          <TutorInterviewPane problemStarted={false} interviewSettings={store.interviewSettings} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
+          <div className="w-full h-full flex">
+            <div className="w-full m bg-white overflow-scroll px-2 h-[45vh]" dangerouslySetInnerHTML={question}></div>
+            <TutorInterviewPane problemStarted={false} interviewSettings={store.interviewSettings} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
+          </div>
           <UserInterviewPane whisperRequest={whisperRequest} restartInterview={null} setIsAwaitingMessageResponse={null} sendMessage={sendMessage}></UserInterviewPane>
         </div>
       </main>

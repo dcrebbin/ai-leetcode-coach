@@ -54,7 +54,7 @@ export default function TutorInterviewPane(props: any) {
       <div className="w-[150px] h-[150px] rounded-full bg-[#77A1DA] flex justify-center items-center drop-shadow-md z-10">
         <p className="text-7xl mb-2">{props.isEmojiTalking ? "😀" : "🙂"}</p>
       </div>
-      <div className="absolute w-72 h-72  border-black border-8 border-transparent border-dashed flex items-end justify-center rounded-full" style={{ borderImage: `url(#circle)`, borderImageWidth: "" }}>
+      {/* <div className="absolute w-72 h-72  border-black border-8 border-transparent border-dashed flex items-end justify-center rounded-full" style={{ borderImage: `url(#circle)`, borderImageWidth: "" }}>
         <p className="text-white text-6xl drop-shadow-md font-bold z-10">{props.problemStarted ? intToTime(countDown) : "15:00"}</p>
         <svg id="circle" className="w-full h-full absolute rotate-[270deg]" style={{ strokeDashoffset: strokeDashOffset }}>
           <circle
@@ -70,7 +70,7 @@ export default function TutorInterviewPane(props: any) {
             stroke={countDownColor}
           />
         </svg>
-      </div>
+      </div> */}
     </div>
   );
 }

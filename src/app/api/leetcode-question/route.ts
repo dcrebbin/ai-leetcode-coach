@@ -23,7 +23,7 @@ export async function POST(req: Request, res: Response) {
   const retrievedData = await json.json();
   const transformedData = {
     question: retrievedData.data.question.content,
-    code: retrievedData.data.question.codeSnippets[0],
+    code: retrievedData.data.question.codeSnippets[0].code,
   };
   return new Response(JSON.stringify(transformedData));
 }

@@ -67,7 +67,7 @@ export default function Settings(props: any) {
                               alert("API Key Removed");
                             }
                           }}
-                          className="bg-black mx-2 p-1 text-white rounded-md"
+                          className="bg-black mx-2 p-1 text-white rounded-md font-sans text-xl"
                         >
                           Save
                         </button>
@@ -113,8 +113,10 @@ export default function Settings(props: any) {
                             });
                             const data = await response.json();
                             console.log(data);
+                            props.setCode(data.code);
+                            props.updateQuestion(data.question);
                           }}
-                          className="bg-black mx-2 h-min p-1 text-white rounded-md"
+                          className="bg-black mx-2 h-min p-1 text-white rounded-md font-sans text-xl"
                         >
                           Load
                         </button>
@@ -145,7 +147,7 @@ export default function Settings(props: any) {
                   props.setSettingsOpen(false);
                 }}
                 type="button"
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto "
+                className="font-sans text-md mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto "
               >
                 Cancel
               </button>

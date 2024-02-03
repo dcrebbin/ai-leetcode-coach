@@ -32,6 +32,7 @@ export default function ChatPane(props: any) {
         onChange={(newValue) => {
           props.setCode(newValue);
         }}
+        value={props.code}
         height="30vh"
         className="mx-8"
         defaultLanguage="cpp"
