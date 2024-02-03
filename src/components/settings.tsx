@@ -3,6 +3,9 @@ import { useRef } from "react";
 
 export default function Settings(props: any) {
   const openAiKeyInput = useRef<HTMLInputElement>(null);
+  const leetCodeQuestionInput = useRef<HTMLInputElement>(null);
+
+  const [leetCodeQuestion, setLeetCodeQuestion] = React.useState("");
   const [token, setToken] = React.useState(props.openAiApiKey);
 
   function MdiGithub(props: SVGProps<SVGSVGElement>) {
@@ -85,6 +88,37 @@ export default function Settings(props: any) {
                         ></input>
                         <div className="mr-2 w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                       </label>
+                    </div>
+                    <div className="flex flex-row justify-between">
+                      <div className="">Load Leetcode Question</div>
+                      <div className="flex">
+                        <input
+                          onChange={(e) => {
+                            setLeetCodeQuestion(e.target.value);
+                          }}
+                          value={leetCodeQuestion}
+                          placeholder="e.g: median-of-two-sorted-arrays"
+                          ref={leetCodeQuestionInput}
+                          type="text"
+                          className=" h-min border-black border-b-2"
+                        ></input>
+                        <button
+                          onClick={async () => {
+                            const response = await fetch("/api/leetcode-question", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({ question: leetCodeQuestionInput?.current?.value }),
+                            });
+                            const data = await response.json();
+                            console.log(data);
+                          }}
+                          className="bg-black mx-2 h-min p-1 text-white rounded-md"
+                        >
+                          Load
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
