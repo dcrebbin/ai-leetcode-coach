@@ -65,7 +65,7 @@ int main() {
   function updateQuestion(question: string) {
     resetMessage();
     setQuestion({ __html: question });
-    messagesArray.push({ role: "question", content: question });
+    messagesArray.push({ role: "assistant", content: question });
     setMessagesArray(messagesArray);
   }
 

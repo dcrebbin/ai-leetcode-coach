@@ -115,6 +115,7 @@ export default function Settings(props: any) {
                             console.log(data);
                             props.setCode(data.code);
                             props.updateQuestion(data.question);
+                            alert("Question Loaded");
                           }}
                           className="bg-black mx-2 h-min p-1 text-white rounded-md font-sans text-xl"
                         >

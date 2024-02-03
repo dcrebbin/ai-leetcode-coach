@@ -14,7 +14,7 @@ export async function POST(req: Request, res: Response) {
     messages: [
       {
         role: "system",
-        content: "You are a technical interview mentor. Do not respond with more than 2-3 sentences.",
+        content: "You are a technical interview mentor. Do not exceed more than 50 words in your responses.",
       },
       ...messages,
     ],
