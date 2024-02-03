@@ -40,7 +40,7 @@ export default function Home() {
 
   useEffect(() => {
     setOpenAiApiKey(window.localStorage.getItem("OPEN_AI_API_KEY") ?? "");
-    setAutoPlay(window.localStorage.getItem("AUTO_PLAY") === "true" ?? true);
+    setAutoPlay(window.localStorage.getItem("AUTO_PLAY") === "true");
   }, []);
 
   const defaultCode = `#include <iostream>
