@@ -1,5 +1,5 @@
 import { ArrowPathIcon } from "@heroicons/react/20/solid";
-import React, { SVGProps, useRef } from "react";
+import React, { SVGProps, useRef, useState } from "react";
 
 function MdiGithub(props: SVGProps<SVGSVGElement>) {
   return (
@@ -14,30 +14,7 @@ export default function Settings(props: any) {
   const leetCodeQuestionInput = useRef<HTMLInputElement>(null);
 
   const [leetCodeQuestion, setLeetCodeQuestion] = React.useState("");
-  const [token, setToken] = React.useState(props.openAiApiKey);
-  const [questionLoading, setQuestionLoading] = React.useState(false);
-
-  function retrieveQuestion() {
-    fetch("/api/leetcode-question", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ question: leetCodeQuestionInput?.current?.value }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setQuestionLoading(false);
-        props.setCode(data.code);
-        props.updateQuestion(data.question);
-        alert("Question Loaded");
-      })
-      .catch((e) => {
-        console.error(e);
-        alert("Error fetching question");
-        setQuestionLoading(false);
-      });
-  }
+  const [token, setToken] = useState(props.openAiApiKey);
 
   return (
     <div className="relative z-50" aria-labelledby="modal-title" aria-modal="true">
@@ -125,15 +102,15 @@ export default function Settings(props: any) {
                           className=" h-min border-black border-b-2"
                         ></input>
                         <button
-                          disabled={questionLoading}
+                          disabled={props.questionLoading}
                           onClick={() => {
                             if (!leetCodeQuestionInput?.current?.value) return alert("Please enter a question");
-                            setQuestionLoading(true);
-                            retrieveQuestion();
+                            props.setQuestionLoading(true);
+                            props.retrieveDsaQuestion();
                           }}
                           className="bg-black mx-2 p-1 text-white rounded-md font-sans text-xl w-12 h-9"
                         >
-                          {questionLoading ? <ArrowPathIcon className="h-full w-full text-white animate-spin" /> : "Load"}
+                          {props.questionLoading ? <ArrowPathIcon className="h-full w-full text-white animate-spin" /> : "Load"}
                         </button>
                       </div>
                     </div>

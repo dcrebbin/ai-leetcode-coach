@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import TutorInterviewPane from "../components/tutor-interview-pane";
@@ -10,6 +11,7 @@ import ChatPane from "@/components/chat-pane";
 import Settings from "@/components/settings";
 import { PlayIcon, StopIcon } from "@heroicons/react/20/solid";
 import { ArrowPathIcon } from "@heroicons/react/16/solid";
+import { stat } from "fs";
 
 export interface MessageSchema {
   role: "assistant" | "user" | "system" | "question";
@@ -17,18 +19,10 @@ export interface MessageSchema {
 }
 
 export default function Home() {
-  const [problemStarted, setProblemStarted] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [isEmojiTalking, setIsEmojiTalking] = useState(false);
   const [question, setQuestion] = useState({ __html: "" });
   const audio = useRef<HTMLAudioElement>(null);
-  const [isPlayingQuestion, setIsPlayingQuestion] = useState(false);
-  const [store, updateStore] = useState({
-    interviewSettings: {
-      targetRole: "tutor",
-      codingInterview: false,
-    },
-  });
 
   const initialPrompt = "Hi, I'm Clara. Welcome to Up It Quest! An AI interview preparation platform!";
   const defaultContextSchema: MessageSchema = {
@@ -42,10 +36,21 @@ export default function Home() {
   const [textToSpeechLoading, setTextToSpeechLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [autoPlay, setAutoPlay] = useState(true);
+  const [questionLoading, setQuestionLoading] = useState(false);
 
+  const state = {
+    hasRendered: false,
+  };
   useEffect(() => {
+    if (state.hasRendered) return;
+    state.hasRendered = true;
     setOpenAiApiKey(window.localStorage.getItem("OPEN_AI_API_KEY") ?? "");
     setAutoPlay(window.localStorage.getItem("AUTO_PLAY") === "true");
+
+    const queryQuestion = window?.location?.search.split("question=")[1];
+    if (queryQuestion) {
+      retrieveDsaQuestion(queryQuestion.toString());
+    }
   }, []);
 
   const defaultCode = `#include <iostream>
@@ -187,13 +192,35 @@ int main() {
     return text;
   }
 
+  function retrieveDsaQuestion(input: string) {
+    fetch("/api/leetcode-question", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ question: input }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setQuestionLoading(false);
+        setCode(data.code);
+        updateQuestion(data.question);
+        alert("Question Loaded");
+      })
+      .catch((e) => {
+        console.error(e);
+        alert("Error fetching question");
+        setQuestionLoading(false);
+      });
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-[url(/images/up-it-quest-background.svg)] items-stretch">
       <AppBar setSettingsOpen={setSettingsOpen}></AppBar>
       <audio ref={audio} id="audio">
         <track kind="captions" />
       </audio>
-      {settingsOpen || !openAiApiKey ? <Settings updateQuestion={updateQuestion} setCode={setCode} setAutoPlay={setAutoPlay} autoPlay={autoPlay} openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
+      {settingsOpen || !openAiApiKey ? <Settings retrieveDsaQuestion={retrieveDsaQuestion} questionLoading={questionLoading} setQuestionLoading={setQuestionLoading} updateQuestion={updateQuestion} setCode={setCode} setAutoPlay={setAutoPlay} autoPlay={autoPlay} openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
       <main className="bg-blue-400 self-stretch flex flex-grow">
         <div className="bg-green-400 w-full p-2">
           <ChatPane setCode={setCode} code={code} whisperIsLoading={whisperIsLoading} isLoading={isLoading} textToSpeechLoading={textToSpeechLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
@@ -219,7 +246,7 @@ int main() {
               )}
               <div className="m bg-white overflow-scroll p-3 h-[45vh] w-full " dangerouslySetInnerHTML={question}></div>
             </div>
-            <TutorInterviewPane problemStarted={false} interviewSettings={store.interviewSettings} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
+            <TutorInterviewPane problemStarted={false} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
           </div>
           <UserInterviewPane whisperRequest={whisperRequest} restartInterview={null} setIsAwaitingMessageResponse={null} sendMessage={sendMessage}></UserInterviewPane>
         </div>
