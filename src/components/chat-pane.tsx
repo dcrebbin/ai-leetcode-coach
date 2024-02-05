@@ -55,20 +55,20 @@ export default function ChatPane(props: any) {
                   <div className="w-full m-2 bg-blue-800 px-4 py-2 text-white rounded-lg">
                     <strong>Clara Codes</strong>
                     <br></br>
-                    {e.content}
+                    <p>{e.content}</p>
                   </div>
-                  {props?.textToSpeechLoading ? (
-                    <div className="flex items-center">
-                      <ArrowPathIcon className="h-6 w-6 text-white animate-spin" />
-                    </div>
-                  ) : (
-                    <PlayIcon
-                      onClick={async () => {
-                        await props?.textToSpeech(e?.content);
-                      }}
-                      className="h-10 w-10 text-white cursor-pointer"
-                    ></PlayIcon>
-                  )}
+                  <div className="h-12 w-12 flex items-center justify-center">
+                    {props?.textToSpeechLoading ? (
+                      <ArrowPathIcon className="h-8 w-8 text-white animate-spin" />
+                    ) : (
+                      <PlayIcon
+                        onClick={async () => {
+                          await props?.textToSpeech(e?.content);
+                        }}
+                        className="h-10 w-10 text-white cursor-pointer"
+                      ></PlayIcon>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
