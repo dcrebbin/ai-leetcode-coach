@@ -59,7 +59,7 @@ export default function ChatPane(props: any) {
                   </div>
                   <div className="h-12 w-12 flex items-center justify-center">
                     {props?.textToSpeechLoading ? (
-                      <ArrowPathIcon className="h-8 w-8 text-white animate-spin" />
+                    <ArrowPathIcon className="h-8 w-8 text-white animate-spin" />
                     ) : (
                       <PlayIcon
                         onClick={async () => {

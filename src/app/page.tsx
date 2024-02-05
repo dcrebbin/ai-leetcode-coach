@@ -3,15 +3,14 @@
 
 import TutorInterviewPane from "../components/tutor-interview-pane";
 import UserInterviewPane from "../components/user-interview-pane";
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FormData from "form-data";
 
 import AppBar from "@/components/app-bar";
 import ChatPane from "@/components/chat-pane";
 import Settings from "@/components/settings";
-import { PlayIcon, StopIcon } from "@heroicons/react/20/solid";
+import { PlayIcon } from "@heroicons/react/20/solid";
 import { ArrowPathIcon } from "@heroicons/react/16/solid";
-import { stat } from "fs";
 
 export interface MessageSchema {
   role: "assistant" | "user" | "system" | "question";
@@ -41,12 +40,12 @@ export default function Home() {
   const state = {
     hasRendered: false,
   };
+
   useEffect(() => {
     if (state.hasRendered) return;
     state.hasRendered = true;
     setOpenAiApiKey(window.localStorage.getItem("OPEN_AI_API_KEY") ?? "");
     setAutoPlay(window.localStorage.getItem("AUTO_PLAY") === "true");
-
     const queryQuestion = window?.location?.search.split("question=")[1];
     if (queryQuestion) {
       retrieveDsaQuestion(queryQuestion.toString());
@@ -202,6 +201,11 @@ int main() {
     })
       .then((response) => response.json())
       .then((data) => {
+        if (data.status === 404) {
+          alert(data.message);
+          setQuestionLoading(false);
+          return;
+        }
         setQuestionLoading(false);
         setCode(data.code);
         updateQuestion(data.question);
@@ -209,7 +213,7 @@ int main() {
       })
       .catch((e) => {
         console.error(e);
-        alert("Error fetching question");
+        alert(e.message);
         setQuestionLoading(false);
       });
   }
