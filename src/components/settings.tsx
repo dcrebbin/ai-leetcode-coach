@@ -104,9 +104,10 @@ export default function Settings(props: any) {
                         <button
                           disabled={props.questionLoading}
                           onClick={() => {
-                            if (!leetCodeQuestionInput?.current?.value) return alert("Please enter a question");
+                            const question = leetCodeQuestionInput?.current?.value;
+                            if (!question) return alert("Please enter a question");
                             props.setQuestionLoading(true);
-                            props.retrieveDsaQuestion();
+                            props.retrieveDsaQuestion(question);
                           }}
                           className="bg-black mx-2 p-1 text-white rounded-md font-sans text-xl w-12 h-9"
                         >
