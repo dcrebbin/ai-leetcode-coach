@@ -30,7 +30,7 @@ export default function UserInterviewPane(props: any) {
     <div className="w-full h-full relative flex justify-center">
       <WebCam isCameraOn={isCameraOn}></WebCam>
       <div className="absolute z-20 justify-center flex bg-black/30 rounded-2xl p-3 m-3 w- items-center h-10 bottom-0">
-        <button
+        {/* <button
           onClick={() => {
             setIsCameraOn(!isCameraOn);
             if (isCameraOn) activateWebCam();
@@ -39,7 +39,7 @@ export default function UserInterviewPane(props: any) {
           className="font-bold text-white flex items-center"
         >
           {isCameraOn ? <VideoCameraSlashIcon className="h-8 w-8 text-white"></VideoCameraSlashIcon> : <VideoCameraIcon className="h-8 w-8 text-white"></VideoCameraIcon>}
-        </button>
+        </button> */}
         <AudioRecorder whisperRequest={props.whisperRequest} sendMessage={props.sendMessage} setIsAwaitingMessageResponse={props.setIsAwaitingMessageResponse}></AudioRecorder>
         <button
           className="text-3xl font-bold text-white hover:text-red-600 items-center flex justify-center"
