@@ -1,3 +1,4 @@
+import { ArrowPathIcon } from "@heroicons/react/20/solid";
 import React, { SVGProps } from "react";
 import { useRef } from "react";
 
@@ -7,6 +8,7 @@ export default function Settings(props: any) {
 
   const [leetCodeQuestion, setLeetCodeQuestion] = React.useState("");
   const [token, setToken] = React.useState(props.openAiApiKey);
+  const [questionLoading, setQuestionLoading] = React.useState(false);
 
   function MdiGithub(props: SVGProps<SVGSVGElement>) {
     return (
@@ -103,7 +105,10 @@ export default function Settings(props: any) {
                           className=" h-min border-black border-b-2"
                         ></input>
                         <button
+                          disabled={questionLoading}
                           onClick={async () => {
+                            if (!leetCodeQuestionInput?.current?.value) return alert("Please enter a question");
+                            setQuestionLoading(true);
                             const response = await fetch("/api/leetcode-question", {
                               method: "POST",
                               headers: {
@@ -111,15 +116,23 @@ export default function Settings(props: any) {
                               },
                               body: JSON.stringify({ question: leetCodeQuestionInput?.current?.value }),
                             });
-                            const data = await response.json();
-                            console.log(data);
-                            props.setCode(data.code);
-                            props.updateQuestion(data.question);
-                            alert("Question Loaded");
+                            await response
+                              .json()
+                              .then((data) => {
+                                setQuestionLoading(false);
+                                props.setCode(data.code);
+                                props.updateQuestion(data.question);
+                                alert("Question Loaded");
+                              })
+                              .catch((e) => {
+                                console.error(e);
+                                alert("Error fetching question");
+                                setQuestionLoading(false);
+                              });
                           }}
-                          className="bg-black mx-2 h-min p-1 text-white rounded-md font-sans text-xl"
+                          className="bg-black mx-2 p-1 text-white rounded-md font-sans text-xl w-12 h-9"
                         >
-                          Load
+                          {questionLoading ? <ArrowPathIcon className="h-full w-full text-white animate-spin" /> : "Load"}
                         </button>
                       </div>
                     </div>
