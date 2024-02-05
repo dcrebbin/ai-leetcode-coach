@@ -1,6 +1,13 @@
 import { ArrowPathIcon } from "@heroicons/react/20/solid";
-import React, { SVGProps } from "react";
-import { useRef } from "react";
+import React, { SVGProps, useRef } from "react";
+
+function MdiGithub(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33c.85 0 1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"></path>
+    </svg>
+  );
+}
 
 export default function Settings(props: any) {
   const openAiKeyInput = useRef<HTMLInputElement>(null);
@@ -10,22 +17,36 @@ export default function Settings(props: any) {
   const [token, setToken] = React.useState(props.openAiApiKey);
   const [questionLoading, setQuestionLoading] = React.useState(false);
 
-  function MdiGithub(props: SVGProps<SVGSVGElement>) {
-    return (
-      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
-        <path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33c.85 0 1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"></path>
-      </svg>
-    );
+  function retrieveQuestion() {
+    fetch("/api/leetcode-question", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ question: leetCodeQuestionInput?.current?.value }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setQuestionLoading(false);
+        props.setCode(data.code);
+        props.updateQuestion(data.question);
+        alert("Question Loaded");
+      })
+      .catch((e) => {
+        console.error(e);
+        alert("Error fetching question");
+        setQuestionLoading(false);
+      });
   }
 
   return (
     <div className="relative z-50" aria-labelledby="modal-title" aria-modal="true">
-      <div
+      <button
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
         onClick={() => {
           props.setSettingsOpen(false);
         }}
-      ></div>
+      ></button>
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto pointer-events-none">
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <div className="bottom-32 relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg pointer-events-auto">
@@ -40,17 +61,17 @@ export default function Settings(props: any) {
                     {")"}
                   </p>
                   <hr></hr>
-                  <div className="mt-2 w-full flex flex-col gap-2">
+                  <div className="mt-2 w-full flex flex-col gap-4">
                     <h4 className="font-bold">API Keys</h4>
                     <div className="flex flex-row justify-between">
-                      <div>Open AI</div>
+                      <div className="font-bold">Open AI</div>
                       <div>
                         <input
                           onChange={(e) => {
                             setToken(e.target.value);
                           }}
                           value={token}
-                          placeholder="Enter your Open AI API Key"
+                          placeholder="sk-"
                           ref={openAiKeyInput}
                           type="text"
                           className=" h-min border-black border-b-2"
@@ -76,7 +97,7 @@ export default function Settings(props: any) {
                       </div>
                     </div>
                     <div className="flex flex-row justify-between">
-                      <div>Auto Play Message</div>
+                      <div className="font-bold">Auto Play Message</div>
                       <div className="relative inline-flex items-center cursor-pointer">
                         <input
                           onChange={() => {
@@ -92,7 +113,7 @@ export default function Settings(props: any) {
                       </div>
                     </div>
                     <div className="flex flex-row justify-between">
-                      <div className="">Load Leetcode Question</div>
+                      <div className="font-bold">Load DSA Question</div>
                       <div className="flex">
                         <input
                           onChange={(e) => {
@@ -106,29 +127,10 @@ export default function Settings(props: any) {
                         ></input>
                         <button
                           disabled={questionLoading}
-                          onClick={async () => {
+                          onClick={() => {
                             if (!leetCodeQuestionInput?.current?.value) return alert("Please enter a question");
                             setQuestionLoading(true);
-                            const response = await fetch("/api/leetcode-question", {
-                              method: "POST",
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                              body: JSON.stringify({ question: leetCodeQuestionInput?.current?.value }),
-                            });
-                            await response
-                              .json()
-                              .then((data) => {
-                                setQuestionLoading(false);
-                                props.setCode(data.code);
-                                props.updateQuestion(data.question);
-                                alert("Question Loaded");
-                              })
-                              .catch((e) => {
-                                console.error(e);
-                                alert("Error fetching question");
-                                setQuestionLoading(false);
-                              });
+                            retrieveQuestion();
                           }}
                           className="bg-black mx-2 p-1 text-white rounded-md font-sans text-xl w-12 h-9"
                         >
