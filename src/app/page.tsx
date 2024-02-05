@@ -36,7 +36,7 @@ export default function Home() {
     content: initialPrompt,
   };
 
-  const [openAiApiKey, setOpenAiApiKey] = useState("");
+  const [openAiApiKey, setOpenAiApiKey] = useState("?");
   const [content, setContent]: any[] = useState([defaultContextSchema]);
   const [messagesArray, setMessagesArray] = useState([defaultContextSchema]);
   const [textToSpeechLoading, setTextToSpeechLoading] = useState(false);
@@ -205,7 +205,7 @@ int main() {
                 <button
                   className="bg-black/25 p-1 rounded-md absolute bottom-0 right-0 m-6 drop-shadow-md z-10"
                   onClick={() => {
-                    if(textToSpeechLoading) return;
+                    if (textToSpeechLoading) return;
                     const selectedText = getSelectionText();
                     if (selectedText.length === 0) {
                       alert("Please select some text to play");
@@ -217,7 +217,7 @@ int main() {
                   {textToSpeechLoading ? <ArrowPathIcon className="w-8 h-8 text-white animate-spin"></ArrowPathIcon> : <PlayIcon className="w-8 h-8 text-white"></PlayIcon>}
                 </button>
               )}
-              <div className="m bg-white overflow-scroll px-2 h-[45vh] w-full" dangerouslySetInnerHTML={question}></div>
+              <div className="m bg-white overflow-scroll p-3 h-[45vh] w-full " dangerouslySetInnerHTML={question}></div>
             </div>
             <TutorInterviewPane problemStarted={false} interviewSettings={store.interviewSettings} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
           </div>
