@@ -57,7 +57,7 @@ export default function ChatPane(props: any) {
                     <br></br>
                     {e.content}
                   </div>
-                  {props?.speechToTextLoading ? (
+                  {props?.textToSpeechLoading ? (
                     <div className="flex items-center">
                       <ArrowPathIcon className="h-6 w-6 text-white animate-spin" />
                     </div>

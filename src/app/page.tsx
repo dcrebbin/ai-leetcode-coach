@@ -9,6 +9,7 @@ import AppBar from "@/components/app-bar";
 import ChatPane from "@/components/chat-pane";
 import Settings from "@/components/settings";
 import { PlayIcon, StopIcon } from "@heroicons/react/20/solid";
+import { ArrowPathIcon } from "@heroicons/react/16/solid";
 
 export interface MessageSchema {
   role: "assistant" | "user" | "system" | "question";
@@ -38,7 +39,7 @@ export default function Home() {
   const [openAiApiKey, setOpenAiApiKey] = useState("");
   const [content, setContent]: any[] = useState([defaultContextSchema]);
   const [messagesArray, setMessagesArray] = useState([defaultContextSchema]);
-  const [speechToTextLoading, setSpeechToTextLoading] = useState(false);
+  const [textToSpeechLoading, setTextToSpeechLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [autoPlay, setAutoPlay] = useState(true);
 
@@ -118,7 +119,7 @@ int main() {
     return () => clearInterval(interval);
   }
   async function textToSpeech(inputString: string) {
-    setSpeechToTextLoading(true);
+    setTextToSpeechLoading(true);
     const data = {
       text: inputString,
     };
@@ -133,7 +134,7 @@ int main() {
     });
 
     const audioBlob = await response.blob();
-    setSpeechToTextLoading(false);
+    setTextToSpeechLoading(false);
     const audioUrl = URL.createObjectURL(audioBlob);
     audio.current!.src = audioUrl;
     audio.current!.volume = 0.5;
@@ -195,7 +196,7 @@ int main() {
       {settingsOpen || !openAiApiKey ? <Settings updateQuestion={updateQuestion} setCode={setCode} setAutoPlay={setAutoPlay} autoPlay={autoPlay} openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
       <main className="bg-blue-400 self-stretch flex flex-grow">
         <div className="bg-green-400 w-full p-2">
-          <ChatPane setCode={setCode} code={code} whisperIsLoading={whisperIsLoading} isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
+          <ChatPane setCode={setCode} code={code} whisperIsLoading={whisperIsLoading} isLoading={isLoading} textToSpeechLoading={textToSpeechLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
         </div>
         <div className="bg-yellow-300 w-full p-2 flex items-center flex-col">
           <div className="w-full h-full flex relative">
@@ -204,20 +205,16 @@ int main() {
                 <button
                   className="bg-black/25 p-1 rounded-md absolute bottom-0 right-0 m-6 drop-shadow-md z-10"
                   onClick={() => {
-                    if (isPlayingQuestion) {
-                      audio.current!.pause();
-                      audio.current!.currentTime = 0;
-                    } else {
-                      const selectedText = getSelectionText();
-                      if (selectedText.length === 0) {
-                        alert("Please select some text to play");
-                        return;
-                      }
-                      textToSpeech(selectedText);
+                    if(textToSpeechLoading) return;
+                    const selectedText = getSelectionText();
+                    if (selectedText.length === 0) {
+                      alert("Please select some text to play");
+                      return;
                     }
+                    textToSpeech(selectedText);
                   }}
                 >
-                  {isPlayingQuestion ? <StopIcon className="w-8 h-8 text-white"></StopIcon> : <PlayIcon className="w-8 h-8 text-white"></PlayIcon>}
+                  {textToSpeechLoading ? <ArrowPathIcon className="w-8 h-8 text-white animate-spin"></ArrowPathIcon> : <PlayIcon className="w-8 h-8 text-white"></PlayIcon>}
                 </button>
               )}
               <div className="m bg-white overflow-scroll px-2 h-[45vh] w-full" dangerouslySetInnerHTML={question}></div>
