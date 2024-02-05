@@ -8,6 +8,7 @@ import FormData from "form-data";
 import AppBar from "@/components/app-bar";
 import ChatPane from "@/components/chat-pane";
 import Settings from "@/components/settings";
+import { PlayIcon, StopIcon } from "@heroicons/react/20/solid";
 
 export interface MessageSchema {
   role: "assistant" | "user" | "system" | "question";
@@ -19,6 +20,8 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [isEmojiTalking, setIsEmojiTalking] = useState(false);
   const [question, setQuestion] = useState({ __html: "" });
+  const audio = useRef<HTMLAudioElement>(null);
+  const [isPlayingQuestion, setIsPlayingQuestion] = useState(false);
   const [store, updateStore] = useState({
     interviewSettings: {
       targetRole: "tutor",
@@ -132,13 +135,13 @@ int main() {
     const audioBlob = await response.blob();
     setSpeechToTextLoading(false);
     const audioUrl = URL.createObjectURL(audioBlob);
-    const audio = new Audio(audioUrl);
-    audio.volume = 0.5;
-    audio.play();
+    audio.current!.src = audioUrl;
+    audio.current!.volume = 0.5;
+    audio.current!.play();
 
     setIsEmojiTalking(true);
     startTalking();
-    audio.onended = () => {
+    audio.current!.onended = () => {
       clearInterval(interval);
       setIsEmojiTalking(false);
     };
@@ -173,17 +176,52 @@ int main() {
     setMessagesArray(messagesArray);
   };
 
+  function getSelectionText() {
+    let text = "";
+    if (window.getSelection) {
+      text = window.getSelection()?.toString() ?? "";
+    } else if (document.getSelection() && document.getSelection()?.type != "Control") {
+      text = document.getSelection()?.addRange.toString() ?? "";
+    }
+    return text;
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-[url(/images/up-it-quest-background.svg)] items-stretch">
       <AppBar setSettingsOpen={setSettingsOpen}></AppBar>
+      <audio ref={audio} id="audio">
+        <track kind="captions" />
+      </audio>
       {settingsOpen || !openAiApiKey ? <Settings updateQuestion={updateQuestion} setCode={setCode} setAutoPlay={setAutoPlay} autoPlay={autoPlay} openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
       <main className="bg-blue-400 self-stretch flex flex-grow">
         <div className="bg-green-400 w-full p-2">
           <ChatPane setCode={setCode} code={code} whisperIsLoading={whisperIsLoading} isLoading={isLoading} speechToTextLoading={speechToTextLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
         </div>
         <div className="bg-yellow-300 w-full p-2 flex items-center flex-col">
-          <div className="w-full h-full flex">
-            <div className="w-full m bg-white overflow-scroll px-2 h-[45vh]" dangerouslySetInnerHTML={question}></div>
+          <div className="w-full h-full flex relative">
+            <div className="w-[40vw] max-w-[23vw] relative">
+              {question.__html == "" ? null : (
+                <button
+                  className="bg-black/25 p-1 rounded-md absolute bottom-0 right-0 m-6 drop-shadow-md z-10"
+                  onClick={() => {
+                    if (isPlayingQuestion) {
+                      audio.current!.pause();
+                      audio.current!.currentTime = 0;
+                    } else {
+                      const selectedText = getSelectionText();
+                      if (selectedText.length === 0) {
+                        alert("Please select some text to play");
+                        return;
+                      }
+                      textToSpeech(selectedText);
+                    }
+                  }}
+                >
+                  {isPlayingQuestion ? <StopIcon className="w-8 h-8 text-white"></StopIcon> : <PlayIcon className="w-8 h-8 text-white"></PlayIcon>}
+                </button>
+              )}
+              <div className="m bg-white overflow-scroll px-2 h-[45vh] w-full" dangerouslySetInnerHTML={question}></div>
+            </div>
             <TutorInterviewPane problemStarted={false} interviewSettings={store.interviewSettings} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
           </div>
           <UserInterviewPane whisperRequest={whisperRequest} restartInterview={null} setIsAwaitingMessageResponse={null} sendMessage={sendMessage}></UserInterviewPane>
