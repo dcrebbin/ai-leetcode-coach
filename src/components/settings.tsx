@@ -83,7 +83,6 @@ export default function Settings(props: any) {
                               window.localStorage.setItem("OPEN_AI_API_KEY", newOpenAiKey);
                               props.setOpenAiApiKey(newOpenAiKey);
                               alert("API Key Saved");
-                              props.setSettingsOpen(false);
                             } else {
                               window.localStorage.removeItem("OPEN_AI_API_KEY");
                               props.setOpenAiApiKey("");
