@@ -1,4 +1,4 @@
-# Up It Quest
+# AI Leetcode Coach (Up It Quest)
 
 Up It Quest is an AI powered interview trainer for technical interviews and leetcode/DSA coaching!
 
