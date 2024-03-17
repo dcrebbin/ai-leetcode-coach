@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link href="/images/up-it-quest-logo.svg" rel="icon" type="image/svg+xml" />
+        <link href="/images/up-it-quest-logo.png" rel="icon" type="image/png" />
       </head>
       <body className={inter.className}>{children}</body>
     </html>

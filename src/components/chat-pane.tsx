@@ -5,7 +5,7 @@ import { Editor } from "@monaco-editor/react";
 
 export default function ChatPane(props: any) {
   return (
-    <div className="w-full h-full flex flex-col justify-start bg-blue-400 mb-20 items-center">
+    <div className="w-full h-full flex flex-col justify-start mb-20 items-center">
       <div className="flex flex-row w-full ">
         <input
           onKeyDown={(e) => {
@@ -15,7 +15,7 @@ export default function ChatPane(props: any) {
           }}
           ref={props?.input}
           placeholder="Type your message here"
-          className="bg-white ml-8 m-2 w-[100%] px-3 py-2  h-9 active:border-none text-black rounded-md
+          className="bg-white ml-8 m-2 w-[100%] px-3 py-2  h-9 active:border-none text-black rounded-md drop-shadow-md border-black/40 border-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
     "
         ></input>
         {props.isLoading ? (
@@ -59,7 +59,7 @@ export default function ChatPane(props: any) {
                   </div>
                   <div className="h-12 w-12 flex items-center justify-center">
                     {props?.textToSpeechLoading ? (
-                    <ArrowPathIcon className="h-8 w-8 text-white animate-spin" />
+                      <ArrowPathIcon className="h-8 w-8 text-white animate-spin" />
                     ) : (
                       <PlayIcon
                         onClick={async () => {

@@ -219,17 +219,17 @@ int main() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[url(/images/up-it-quest-background.svg)] items-stretch">
+    <div className="min-h-screen flex flex-col bg-[url(/images/up-it-quest-background.svg)] bg-cover items-stretch">
       <AppBar setSettingsOpen={setSettingsOpen}></AppBar>
       <audio ref={audio} id="audio">
         <track kind="captions" />
       </audio>
       {settingsOpen || !openAiApiKey ? <Settings retrieveDsaQuestion={retrieveDsaQuestion} questionLoading={questionLoading} setQuestionLoading={setQuestionLoading} updateQuestion={updateQuestion} setCode={setCode} setAutoPlay={setAutoPlay} autoPlay={autoPlay} openAiApiKey={openAiApiKey} setOpenAiApiKey={setOpenAiApiKey} setSettingsOpen={setSettingsOpen}></Settings> : null}
-      <main className="bg-blue-400 self-stretch flex flex-grow">
-        <div className="bg-green-400 w-full p-2">
+      <main className="self-stretch flex flex-grow">
+        <div className="w-full p-2">
           <ChatPane setCode={setCode} code={code} whisperIsLoading={whisperIsLoading} isLoading={isLoading} textToSpeechLoading={textToSpeechLoading} content={content} input={input} sendMessage={sendMessage} textToSpeech={textToSpeech}></ChatPane>
         </div>
-        <div className="bg-yellow-300 w-full p-2 flex items-center flex-col">
+        <div className="w-full p-2 flex items-center flex-col">
           <div className="w-full h-full flex relative">
             <div className="w-[40vw] max-w-[23vw] relative">
               {question.__html == "" ? null : (
@@ -248,7 +248,7 @@ int main() {
                   {textToSpeechLoading ? <ArrowPathIcon className="w-8 h-8 text-white animate-spin"></ArrowPathIcon> : <PlayIcon className="w-8 h-8 text-white"></PlayIcon>}
                 </button>
               )}
-              <div className="m bg-white overflow-scroll p-3 h-[45vh] w-full " dangerouslySetInnerHTML={question}></div>
+              <div className="m bg-white drop-shadow-md overflow-scroll p-3 h-[45vh] w-full " dangerouslySetInnerHTML={question}></div>
             </div>
             <TutorInterviewPane problemStarted={false} updateTargetRole={null} updateCodingInterview={null} isEmojiTalking={isEmojiTalking}></TutorInterviewPane>
           </div>
